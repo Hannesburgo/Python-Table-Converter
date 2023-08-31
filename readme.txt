@@ -1,0 +1,1 @@
+A Python program, made to adquire tables and convert them to patterns gave by the user.
