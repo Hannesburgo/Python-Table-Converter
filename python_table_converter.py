@@ -1,9 +1,9 @@
 # Python module to handle excel tables.
 import openpyxl
 
-# This is where the table will be stored and dissected.
+# This class is where the old table is dissected.
 class Table:
-    def __init__(self, directory):
+    def __init__(self, directory:str):
         self.table = openpyxl.load_workbook(directory)
         self.activeSheet = self.table.active
         self.sheets = dict()
@@ -31,10 +31,10 @@ class Table:
         except:
             print("[ERROR] Unknow Element - Check if the passed element exists.")
         return templist
-
-# This is where all stones are going to be stored and checked
+    
+# This class gets all the formats and sizes of the inputted table.
 class Formats:
-    def __init__(self, dictionary):
+    def __init__(self, dictionary:dict):
         self.formats = dict()
         self.dictionary = dictionary
 
@@ -56,6 +56,63 @@ class Formats:
 
     def getFormats(self):
         return self.formats
+
+# This class gets all the information about the old table and the formats to build a new one, following certain patterns.
+class TableBuilder:
+    def __init__(self, lastID:int, motherStone:str, motherStoneSignature:str, shortDescription, longDescription, lapidation:str):
+        self.lastID = lastID
+        self.newTableInfo = list()
+        self.defaultTableStructure = ([
+    "ID", "Tipo", "SKU", "Nome", "Publicado", "Em Destaque?", "Visibilidade no catálogo", "Descrição curta", "Descrição", 
+    "Data de preço promocional","Data de preço promocional", "Status da taxa", "Classe de taxa", "Em estoque?", "Estoque", 
+    "Quantidade baixa de estoque", "São permitidas encomendas", "Vendido individualmente", "Peso (kg)", "Comprimento (cm)", 
+    "Largura (cm)", "Altura (cm)", "Permitir avaliações", "Nota da compra", "Preço promocional", "Preço", "Categorias", "Tags", 
+    "Classe de entrega", "Imagens", "Limite de download", "Dias para expirar o download", "Produto ascendente", "Grupo de produtos",
+    "Aumentar vendas","Venda cruzada", "URL externa", "Texto do botão","Posição", "Nome do atributo 1", "Valores do atributo 1",
+    "Visibilidade do atributo 1","Atributo global 1", "Nome do atributo 2", "Valores do atributo 2", "Visibilidade do atributo 2",
+    "Atributo global 2", "Nome do atributo 3","Valores do atributo 3","Visibilidade do atributo 3", "Atributo global 3",
+    "Atributo padrão 1"])
+        self.motherStone = motherStone
+        self.motherStoneSignature = motherStoneSignature
+        self.shortDescription = shortDescription
+        self.longDescription = longDescription
+        self.lapidation = lapidation
+
+    def automaticBuild(self, table, variations):
+        self.filterTable(table, variations)
+        self.buildNewTableInfo(variations)
+        self.saveNewTable()
+
+    # Filters the old table, adding all the formats and sizes into a class "Formats"
+    def filterTable(self, table, variations):
+        for row in table.getActiveSheetElement("rows"):
+            formatKey = row[1][2:]
+            formatID = row[0]
+            formatSize = row[2]
+
+            variations.appendFormat(formatKey)
+            variations.appendInfo(formatKey, formatID, formatSize)
+
+    def buildNewTableInfo(self, variations):
+        self.newTableInfo.append(self.defaultTableStructure)
+        for formats in variations.getFormats():
+        # Retrive all variations of the currently iterable Format, and repeat for each one of them.
+            variationInfo = variations.getFormats()[formats]
+            for info in variationInfo:
+                self.lastID += 1
+                self.newTableInfo.append([self.lastID, "variation", info[0], self.motherStone, 1, 0, "visible", self.shortDescription, 
+                self.longDescription, None, None, "taxable", "parent", 1, None, None, 0, 0, 0, 0, 0, 0, 0, None, None, 0, None, None, None, 
+                None, None, None, self.motherStoneSignature, None, None, None, None, None, 0, "Formato", formats, 1, 1, "Lapidação", 
+                self.lapidation, 1, 1, "Tamanho", info[1], 1, 1])
+
+    def saveNewTable(self):
+        newTable = openpyxl.Workbook()
+        newTableSheet = newTable.active
+
+        for row in self.newTableInfo:
+            newTableSheet.append(row)
+
+        newTable.save("newTable.xlsx")
 
 formatsDictionary = {
     "BA": "Baguete",
@@ -80,75 +137,8 @@ formatsDictionary = {
     "RDMIL*": "Redonda Milheiro Asterisco"
 }
 
-oldTable = Table("LISTCUS-zp a.xlsx")
+oldTable = Table(input("Insira o nome do arquivo da tabela: "))
 variations = Formats(formatsDictionary)
+tbuilder = TableBuilder(14404, input(), "ZP", None, None, "Facetado")
 
-# Filters the old table, adding all the formats and sizes into a class "Formats"
-def filterOldTable():
-    for row in oldTable.getActiveSheetElement("rows"):
-        formatKey = row[1][2:]
-        formatID = row[0]
-        formatSize = row[2]
-
-        variations.appendFormat(formatKey)
-        variations.appendInfo(formatKey, formatID, formatSize)
-    # print(variations.getFormats())
-
-defaultTableStructure = ([
-    "ID", "Tipo", "SKU", "Nome", "Publicado", "Em Destaque?", "Visibilidade no catálogo", "Descrição curta", "Descrição", 
-    "Data de preço promocional","Data de preço promocional", "Status da taxa", "Classe de taxa", "Em estoque?", "Estoque", 
-    "Quantidade baixa de ???", "São permitidas encomendas", "Vendido individualmente", "Peso (kg)", "Comprimento (cm)", 
-    "Largura (cm)", "Altura (cm)", "Permitir avaliações", "Nota da compra", "Preço promocional", "Preço", "Categorias", "Tags", 
-    "Classe de entrega", "Imagens", "Limite de download", "Dias para expirar o ???", "Produto ascendente", "Grupo de produtos",
-    "Aumentar vendas","Venda cruzada", "URL externa", "Texto do botão","Posição", "Nome do atributo 1", "Valores do atributo 1",
-    "Visibilidade do atributo 1","Atributo global 1", "Nome do atributo 2", "Valores do atributo 2", "Visibilidade do atributo 2",
-    "Atributo global 2", "Nome do atributo 3","Valores do atributo 3","Visibilidade do atributo 3", "Atributo global 3",
-    "Atributo padrão 1"])
-newTableInfo = list()
-
-motherStone = "Zircônia de Primeira"
-motherStoneSignature = "ZP"
-shortDescription = None
-longDescription = None
-lapidation = "Facetado"
-
-def buildnewTableInfo(header):
-    lastID = 14206
-
-    newTableInfo.append(header)
-    for formats in variations.getFormats():
-        # Retrive all variations of the currently iterable Format, and repeat for each one of them.
-        variationInfo = variations.getFormats()[formats]
-        for info in variationInfo:
-            lastID += 1
-            newTableInfo.append([lastID, "variation", info[0], motherStone, 1, 0, "visible", shortDescription, longDescription, None, None, 
-                "taxable", "parent", 1, None, None, 0, 0, 0, 0, 0, 0, 0, None, None, 0, None, None, None, None, None, None, motherStoneSignature, 
-                None, None, None, None, None, 0, "Formato", formats, None, 1, "Lapidação", lapidation, None, 1, "Tamanho", info[1], None, 1])
-
-def buildHeaderProductAtt():
-    mainProductAtt = ([], [])
-    for formats in variations.getFormats():
-        mainProductAtt[0].append(formats)
-        variationInfo = variations.getFormats()[formats]
-        for info in variationInfo:
-            mainProductAtt[1].append(info[1])
-    
-    tempForm = ','.join(map(str, mainProductAtt[0]))
-    tempSizes = ','.join(map(str, mainProductAtt[1]))
-    print(tempForm)
-    print("\n")
-    print(tempSizes)
-
-def saveNewTable():
-    newTable = openpyxl.Workbook()
-    newTableSheet = newTable.active
-
-    for row in newTableInfo:
-        newTableSheet.append(row)
-
-    newTable.save("newTable.xlsx")
-
-filterOldTable()
-buildnewTableInfo(defaultTableStructure)
-buildHeaderProductAtt()
-      
+tbuilder.automaticBuild(oldTable, variations)
