@@ -59,19 +59,10 @@ class Formats:
 
 # This class gets all the information about the old table and the formats to build a new one, following certain patterns.
 class TableBuilder:
-    def __init__(self, lastID:int, motherStone:str, motherStoneSignature:str, shortDescription, longDescription, lapidation:str):
+    def __init__(self, defaultTableStructure:list, lastID:int, motherStone:str, motherStoneSignature:str, shortDescription, longDescription, lapidation:str):
         self.lastID = lastID
         self.newTableInfo = list()
-        self.defaultTableStructure = ([
-    "ID", "Tipo", "SKU", "Nome", "Publicado", "Em Destaque?", "Visibilidade no catálogo", "Descrição curta", "Descrição", 
-    "Data de preço promocional","Data de preço promocional", "Status da taxa", "Classe de taxa", "Em estoque?", "Estoque", 
-    "Quantidade baixa de estoque", "São permitidas encomendas", "Vendido individualmente", "Peso (kg)", "Comprimento (cm)", 
-    "Largura (cm)", "Altura (cm)", "Permitir avaliações", "Nota da compra", "Preço promocional", "Preço", "Categorias", "Tags", 
-    "Classe de entrega", "Imagens", "Limite de download", "Dias para expirar o download", "Produto ascendente", "Grupo de produtos",
-    "Aumentar vendas","Venda cruzada", "URL externa", "Texto do botão","Posição", "Nome do atributo 1", "Valores do atributo 1",
-    "Visibilidade do atributo 1","Atributo global 1", "Nome do atributo 2", "Valores do atributo 2", "Visibilidade do atributo 2",
-    "Atributo global 2", "Nome do atributo 3","Valores do atributo 3","Visibilidade do atributo 3", "Atributo global 3",
-    "Atributo padrão 1"])
+        self.defaultTableStructure = defaultTableStructure
         self.motherStone = motherStone
         self.motherStoneSignature = motherStoneSignature
         self.shortDescription = shortDescription
@@ -136,9 +127,19 @@ formatsDictionary = {
     "RDMIL": "Redonda Milheiro",
     "RDMIL*": "Redonda Milheiro Asterisco"
 }
+tableStructure = ([
+    "ID", "Tipo", "SKU", "Nome", "Publicado", "Em Destaque?", "Visibilidade no catálogo", "Descrição curta", "Descrição", 
+    "Data de preço promocional","Data de preço promocional", "Status da taxa", "Classe de taxa", "Em estoque?", "Estoque", 
+    "Quantidade baixa de estoque", "São permitidas encomendas", "Vendido individualmente", "Peso (kg)", "Comprimento (cm)", 
+    "Largura (cm)", "Altura (cm)", "Permitir avaliações", "Nota da compra", "Preço promocional", "Preço", "Categorias", "Tags", 
+    "Classe de entrega", "Imagens", "Limite de download", "Dias para expirar o download", "Produto ascendente", "Grupo de produtos",
+    "Aumentar vendas","Venda cruzada", "URL externa", "Texto do botão","Posição", "Nome do atributo 1", "Valores do atributo 1",
+    "Visibilidade do atributo 1","Atributo global 1", "Nome do atributo 2", "Valores do atributo 2", "Visibilidade do atributo 2",
+    "Atributo global 2", "Nome do atributo 3","Valores do atributo 3","Visibilidade do atributo 3", "Atributo global 3",
+    "Atributo padrão 1"])
 
 oldTable = Table(input("Insira o nome do arquivo da tabela: "))
 variations = Formats(formatsDictionary)
-tbuilder = TableBuilder(14404, input(), "ZP", None, None, "Facetado")
+tbuilder = TableBuilder(tableStructure, 14404, input(), input("Insira o código mãe da pedra (Ex: 'ZP'): "), None, None, "Facetado")
 
 tbuilder.automaticBuild(oldTable, variations)
