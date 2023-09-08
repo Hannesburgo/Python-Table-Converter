@@ -139,7 +139,8 @@ tableStructure = ([
     "Atributo padrão 1"])
 
 oldTable = Table(input("Insira o nome do arquivo da tabela: "))
-variations = Formats(formatsDictionary)
-tbuilder = TableBuilder(tableStructure, 14404, input(), input("Insira o código mãe da pedra (Ex: 'ZP'): "), None, None, "Facetado")
 
+variations = Formats(formatsDictionary)
+
+tbuilder = TableBuilder(tableStructure, 14404, input(), input("Insira o código mãe da pedra (Ex: 'ZP'): "), None, None, "Facetado")
 tbuilder.automaticBuild(oldTable, variations)
