@@ -106,6 +106,7 @@ class TableBuilder:
         newTable.save("newTable.xlsx")
 
 formatsDictionary = {
+    "ZP": "Branca",
     "BA": "Baguete",
     "CA": "Carre",
     "CO": "Coração",
@@ -136,11 +137,19 @@ tableStructure = ([
     "Aumentar vendas","Venda cruzada", "URL externa", "Texto do botão","Posição", "Nome do atributo 1", "Valores do atributo 1",
     "Visibilidade do atributo 1","Atributo global 1", "Nome do atributo 2", "Valores do atributo 2", "Visibilidade do atributo 2",
     "Atributo global 2", "Nome do atributo 3","Valores do atributo 3","Visibilidade do atributo 3", "Atributo global 3",
-    "Atributo padrão 1"])
+    "Nome do atributo 4", "Valores do atributo 4", "Visibilidade do atributo 4", "Atributo global 4"])
 
 oldTable = Table(input("Insira o nome do arquivo da tabela: "))
 
 variations = Formats(formatsDictionary)
 
-tbuilder = TableBuilder(tableStructure, 14404, input(), input("Insira o código mãe da pedra (Ex: 'ZP'): "), None, None, "Facetado")
+tbuilder = TableBuilder(
+    tableStructure, 
+    int(input("Insira o último ID: ")),  
+    None,
+    None,
+    "Facetado", 
+    input("Insira o nome da pedra mãe 'Exemplo: Zircônia de Primeira': "),
+    input("Insira o código da pedra mãe 'Exemplo: ZP': ")
+)
 tbuilder.automaticBuild(oldTable, variations)
