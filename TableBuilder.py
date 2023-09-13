@@ -3,13 +3,12 @@ import openpyxl
 
 # This class gets all the information about the old table and the formats to build a new one, following certain patterns.
 class TableBuilder:
-    def __init__(self, defaultTableStructure:list, lastID:int, shortDescription, longDescription, lapidation:str, motherStoneName:str, motherStoneSignature:str):
+    def __init__(self, defaultTableStructure:list, lastID:int, shortDescription, longDescription, motherStoneName:str, motherStoneSignature:str):
         self.lastID = lastID
         self.newTableInfo = list()
         self.defaultTableStructure = defaultTableStructure
         self.shortDescription = shortDescription
         self.longDescription = longDescription
-        self.lapidation = lapidation
         self.motherStoneName = motherStoneName
         self.motherStoneSignature = motherStoneSignature
 
@@ -21,13 +20,16 @@ class TableBuilder:
     # Filters the old table, adding all the formats and sizes into a class "Formats"
     def filterTable(self, table, variations):
         for row in table.getActiveSheetElement("rows"):
-            stoneType = row[1][:2]
-            formatKey = row[1][2:]
+            formatColor = row[1][:2]
+            formatKey = row[1][2:4]
             formatID = row[0]
             formatSize = row[2]
+            formatLapidation = row[1][4:]
+            if not formatLapidation:
+                formatLapidation = "FC"
 
             variations.appendFormat(formatKey)
-            variations.appendInfo(formatKey, formatID, formatSize, stoneType)
+            variations.appendInfo(formatKey, formatID, formatSize, formatColor, formatLapidation)
 
     def buildNewTableInfo(self, variations):
         self.newTableInfo.append(self.defaultTableStructure)
@@ -39,7 +41,7 @@ class TableBuilder:
                 self.newTableInfo.append([self.lastID, "variation", info[0], self.motherStoneName, 1, 0, "visible", self.shortDescription, 
                 self.longDescription, None, None, "taxable", "parent", 1, None, None, 0, 0, 0, 0, 0, 0, 0, None, None, 0, None, None, None, 
                 None, None, None, self.motherStoneSignature, None, None, None, None, None, 0, "Cor", info[2], 1, 1, "Formato", 
-                formats, 1, 1, "Tamanho", info[1], 1, 1, "Lapidação", self.lapidation, 1, 1])
+                formats, 1, 1, "Tamanho", info[1], 1, 1, "Lapidação", info[3], 1, 1])
 
     def saveNewTable(self):
         newTable = openpyxl.Workbook()

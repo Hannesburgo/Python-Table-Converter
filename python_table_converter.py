@@ -7,6 +7,10 @@ from Formats import Formats
 from TableBuilder import TableBuilder
 
 formatsDictionary = {
+    "FC": "Facetado",
+    "CB": "Cabochão",
+    "ZA": "Ametista",
+    "ZL": "Lilás",
     "ZP": "Branca",
     "BA": "Baguete",
     "CA": "Carre",
@@ -41,15 +45,12 @@ tableStructure = ([
     "Nome do atributo 4", "Valores do atributo 4", "Visibilidade do atributo 4", "Atributo global 4"])
 
 oldTable = Table(input("Insira o nome do arquivo da tabela: "))
-
 variations = Formats(formatsDictionary)
-
 tbuilder = TableBuilder(
     tableStructure, 
     int(input("Insira o último ID: ")),  
     None,
     None,
-    "Facetado", 
     input("Insira o nome da pedra mãe 'Exemplo: Zircônia de Primeira': "),
     input("Insira o código da pedra mãe 'Exemplo: ZP': ")
 )

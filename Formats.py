@@ -17,8 +17,8 @@ class Formats:
     def deleteFormat(self, formatID):
         del self.formats[formatID]
 
-    def appendInfo(self, formatID, id, size, color):
-        self.formats[self.dictionary[formatID]].append([id, size, self.dictionary[color]])
+    def appendInfo(self, formatID, id, size, color, lapidation):
+        self.formats[self.dictionary[formatID]].append([id, size, self.dictionary[color], self.dictionary[lapidation]])
 
     def getFormats(self):
         return self.formats
