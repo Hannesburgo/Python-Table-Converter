@@ -6,33 +6,84 @@ from Table import Table
 from Formats import Formats
 from TableBuilder import TableBuilder
 
-formatsDictionary = {
-    "FC": "Facetado",
-    "CB": "Cabochão",
-    "ZA": "Ametista",
-    "ZL": "Lilás",
-    "ZP": "Branca",
-    "BA": "Baguete",
-    "CA": "Carre",
-    "CO": "Coração",
-    "GO": "Gota",
-    "NA": "Navete",
-    "OC": "Octogonal",
-    "OV": "Oval",
-    "RD": "Redondo",
-    "TR": "Triângulo",
-    "TZ": "Trapézio",
-    "CAEX": "Carre Extra",
-    "RDEX": "Redonda Extra",
-    "RDAZ": "Redonda Azul",
-    "RDFM": "Redonda Fume",
-    "RD-AAA": "Redonda Milheiro AAA",
-    "RDM-RE": "Redonda Milheiro Rema",
-    "RDM-EX": "Redonda Milheiro Extra",
-    "RDM/TS": "Redonda Milheiros TS",
-    "RDMIL": "Redonda Milheiro",
-    "RDMIL*": "Redonda Milheiro Asterisco"
+allDictionary = {
+    "Formatos": {
+        "AQ": "Antique",
+        "BA": "Baguete",
+        "CA": "Carre",
+        "CE": "Cela",
+        "CL": "Cela Lateral",
+        "CO": "Coração",
+        "CZ": "Cruz",
+        "DI": "Disco",
+        "ET": "Estrela",
+        "FL": "Flor",
+        "FO": "Folha",
+        "GC": "Gota Chata",
+        "GO": "Gota",
+        "GOMO": "Gomo",
+        "HX": "Hexagono",
+        "IG": "Igreja",
+        "LE": "Leque",
+        "LO": "Losango",
+        "LU": "Lua",
+        "MC": "Meio Coração",
+        "NA": "Navete",
+        "OC": "Octogonal",
+        "OV": "Oval",
+        "RD": "Redondo",
+        "SA": "Saia",
+        "TH": "Trilhão",
+        "TR": "Triângulo",
+        "TV": "Trevo",
+        "TZ": "Trapézio",
+    },
+    "Pedras": {
+        "ZA": "Ametista",
+        "ZB": "Bege",
+        "ZE": "Esmeralda",
+        "ZF": "Fumê",
+        "ZG": "Granada",
+        "ZL": "Lilás",
+        "ZM": "Amarela",
+        "ZN": "Negra",
+        "ZO": "Laranja",
+        "ZR": "Rosa",
+        "ZS": "Branca",
+        "ZP": "Branca",
+        "ZT": "Tanzanita",
+        "ZV": "Verde",
+        "ZZ": "Azul",     
+        "ZVCL": "Verde Clara"   
+    },
+    "Lapidações": {
+        "FC": "Facetado",
+        "CB": "Cabochão",
+        "BE": "Briolet",
+        "CH": "Chapa",
+        "MI": "Millenium",
+        "IR": "Irregular",
+        "FU": "Furado",
+        "QD": "Quadrante",
+        "/I": ""
+    },
+    "Extras": {
+        "CQ": "Canto Quebrado",
+        "CV": "Canto Vivo",
+        "FL": "Furo Lateral",
+        "FT": "Furo Topo",
+        "FF": "Furo Frontal",
+        "MF": "Meio Furo",
+        "ML": "Meio Lado",
+        "OP": "Opaca",
+        "SP": "Superior",
+        "TO": "Torto",
+        "FM": "Fume",
+        "Q": "Quebrada",
+        "/I": ""
+    }
 }
+
 tableStructure = ([
     "ID", "Tipo", "SKU", "Nome", "Publicado", "Em Destaque?", "Visibilidade no catálogo", "Descrição curta", "Descrição", 
     "Data de preço promocional","Data de preço promocional", "Status da taxa", "Classe de taxa", "Em estoque?", "Estoque", 
@@ -45,14 +96,17 @@ tableStructure = ([
     "Nome do atributo 4", "Valores do atributo 4", "Visibilidade do atributo 4", "Atributo global 4"])
 
 oldTable = Table(input("Insira o nome do arquivo da tabela: "))
-variations = Formats(formatsDictionary)
+
+variations = Formats(allDictionary)
+
 tbuilder = TableBuilder(
     tableStructure, 
     int(input("Insira o último ID: ")),  
     None,
     None,
     input("Insira o nome da pedra mãe 'Exemplo: Zircônia de Primeira': "),
-    input("Insira o código da pedra mãe 'Exemplo: ZP': ")
+    input("Insira o código da pedra mãe 'Exemplo: ZP': "),
+    input("Apenas de primeira? [True ou False]: ")
 )
 
 tbuilder.automaticBuild(oldTable, variations)
